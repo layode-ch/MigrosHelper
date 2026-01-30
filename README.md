@@ -1,115 +1,131 @@
-Reely
+# Documentation API Migros
 
+Ce document répertorie les méthodes disponibles pour interagir avec les services Migros (Produits, Magasins, Recettes, Cumulus).
 
-Liste des methodes pour appeler l'API :
+## 📋 Flux de travail typique (Produits)
 
-  Produits
+Pour récupérer des informations sur les produits, suivez généralement cet ordre d'appels :
 
-  MigrosAPI.products.productSearch.searchProduct(body, options?, token)
+1.  **Authentification** : Obtenir un token invité via `getGuestToken()`.
+2.  **Recherche** : Utiliser `searchProduct()` ou `categoryList()` pour trouver des articles.
+3.  **Détails** : Utiliser les IDs récupérés pour obtenir les fiches complètes via `getProductDetails()`.
+4.  **Stock** : (Optionnel) Vérifier la disponibilité en magasin avec `getProductSupply()`.
 
-  Recherche de produits par texte.
-  - query - terme de recherche (requis)
-  - language - EN, DE, FR, IT
-  - regionId - national ou gmos
-  - sortFields - tri par normalizedUnit ou effectiveUnitPrice
-  - sortOrder - asc / desc
-  - filters - filtres additionnels
-  - productIds - filtrer par IDs spécifiques
+---
 
-  MigrosAPI.products.productSearch.categoryList(body, options?, token)
+## 🔐 Authentification
 
-  Liste les produits par catégorie avec pagination.
-  - categoryId - ID de la catégorie (requis)
-  - from - offset de pagination (requis)
-  - language, regionId, sortFields, sortOrder
-  - requestSponsoredProducts - inclure les produits sponsorisés
+Gestion des tokens d'accès.
 
-  MigrosAPI.products.productDisplay.getProductCards(options, token)
+### `MigrosAPI.account.oauth2`
 
-  Récupère les fiches produit (résumé).
-  - productFilter.uids - tableau d'UIDs produit (requis)
-  - offerFilter.storeType, offerFilter.region
+* **`getGuestToken()`**
+    * *Description :* Génère un token invité. Nécessaire pour tous les appels liés aux produits.
+    * *Paramètres :* Aucun.
 
-  MigrosAPI.products.productDisplay.getProductDetails(options, token)
+* **`getUserInfo(token?)`**
+    * *Description :* Récupère les informations de l'utilisateur actuellement connecté.
 
-  Détails complets d'un ou plusieurs produits.
-  - uids - UID(s) produit
-  - migrosIds - IDs Migros
-  - storeType, region, warehouseId
+---
 
-  MigrosAPI.products.marketableStock.getProductSupply(options, token)
+## 🛒 Produits
 
-  Disponibilité/stock d'un produit en magasin.
-  - pids - IDs produit (requis)
-  - costCenterIds - IDs de centre de coûts
+Espace de noms : `MigrosAPI.products`
 
-  ---
-  Magasins
+### Recherche (`productSearch`)
 
-  MigrosAPI.stores.storeSearch.searchStores(options, token)
+* **`searchProduct(body, options?, token)`**
+    * *Description :* Recherche de produits par texte.
+    * **query** (requis) : Terme de recherche.
+    * `language` : Langue de réponse (`EN`, `DE`, `FR`, `IT`).
+    * `regionId` : `national` ou `gmos`.
+    * `sortFields` : Tri par `normalizedUnit` ou `effectiveUnitPrice`.
+    * `sortOrder` : Ordre de tri (`asc` / `desc`).
+    * `filters` : Filtres additionnels.
+    * `productIds` : Filtrer par une liste d'IDs spécifiques.
 
-  Recherche de magasins.
-  - query - nom ou localisation
+* **`categoryList(body, options?, token)`**
+    * *Description :* Liste les produits par catégorie avec pagination.
+    * **categoryId** (requis) : ID de la catégorie.
+    * **from** (requis) : Offset de pagination (point de départ).
+    * `language`, `regionId`, `sortFields`, `sortOrder`.
+    * `requestSponsoredProducts` : Booléen pour inclure les produits sponsorisés.
 
-  ---
-  Recettes (Migusto) - pas besoin d'auth
+### Affichage (`productDisplay`)
 
-  MigrosAPI.migusto.recipeSearch(options)
+* **`getProductCards(options, token)`**
+    * *Description :* Récupère les fiches produit résumées (format carte).
+    * **productFilter.uids** (requis) : Tableau d'UIDs produit.
+    * `offerFilter.storeType`
+    * `offerFilter.region`
 
-  Recherche de recettes.
-  - searchTerm, ingredients, language, limit, offset, order
+* **`getProductDetails(options, token)`**
+    * *Description :* Récupère les détails complets d'un ou plusieurs produits.
+    * `uids` : UID(s) du produit.
+    * `migrosIds` : IDs Migros alternatifs.
+    * `storeType`, `region`, `warehouseId`.
 
-  MigrosAPI.migusto.recipeProducts(options)
+### Stocks (`marketableStock`)
 
-  Produits nécessaires pour une recette.
-  - id - ID de la recette (requis)
+* **`getProductSupply(options, token)`**
+    * *Description :* Vérifie la disponibilité et le stock d'un produit en magasin.
+    * **pids** (requis) : IDs des produits.
+    * `costCenterIds` : IDs de centre de coûts (magasins).
 
-  MigrosAPI.migusto.recipeDetails(options)
+---
 
-  Détails d'une recette (ingrédients, instructions, etc.).
-  - slug - slug de la recette (requis)
+## 🏪 Magasins
 
-  ---
-  Authentification
+Espace de noms : `MigrosAPI.stores`
 
-  MigrosAPI.account.oauth2.getGuestToken()
+### `storeSearch`
 
-  Token invité (nécessaire pour tous les appels produits). Aucun paramètre.
+* **`searchStores(options, token)`**
+    * *Description :* Recherche de magasins physiques.
+    * `query` : Nom du magasin ou localisation.
 
-  MigrosAPI.account.oauth2.getUserInfo(token?)
+---
 
-  Infos utilisateur connecté.
+## 👨‍🍳 Recettes (Migusto)
 
-  ---
-  Cumulus (nécessite des cookies de login)
-  ┌─────────────────────────────┬───────────────────────────────────────┐
-  │           Méthode           │              Description              │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusStats()           │ Points Cumulus                        │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusReceipt(options)  │ Un ticket de caisse (parsé)           │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusReceipts(options) │ Liste de tickets (par plage de dates) │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusPrincipal()       │ Profil utilisateur                    │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusHousehold()       │ Infos ménage                          │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusInvoice()         │ Factures                              │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusCreditCard()      │ Carte de crédit                       │
-  ├─────────────────────────────┼───────────────────────────────────────┤
-  │ getCumulusPaymentSites()    │ Sites de paiement                     │
-  └─────────────────────────────┴───────────────────────────────────────┘
-  ---
-  Sécurité (nécessite des cookies de login)
+> **Note :** Cette section ne nécessite pas d'authentification préalable.
 
-  - getOptions() - Options de sécurité du compte
-  - getPaymentDevices() - Appareils de paiement
+Espace de noms : `MigrosAPI.migusto`
 
-  ---
-  Pour les produits, le flux typique est :
-  1. Obtenir un token avec getGuestToken()
-  2. Utiliser searchProduct() ou categoryList() pour trouver des produits
-  3. Utiliser getProductDetails() ou getProductCards() pour les détails
-  4. Optionnellement getProductSupply() pour le stock en magasin
+* **`recipeSearch(options)`**
+    * *Description :* Moteur de recherche de recettes.
+    * Paramètres : `searchTerm`, `ingredients`, `language`, `limit`, `offset`, `order`.
+
+* **`recipeProducts(options)`**
+    * *Description :* Liste les produits nécessaires pour réaliser une recette.
+    * **id** (requis) : ID de la recette.
+
+* **`recipeDetails(options)`**
+    * *Description :* Détails complets (ingrédients, instructions, temps, etc.).
+    * **slug** (requis) : Slug URL de la recette.
+
+---
+
+## 💳 Cumulus
+
+> **Important :** Toutes les méthodes de cette section nécessitent des **cookies de login** valides.
+
+| Méthode | Description |
+| :--- | :--- |
+| `getCumulusStats()` | Solde et statut des points Cumulus. |
+| `getCumulusReceipt(options)` | Récupère un ticket de caisse spécifique (parsé). |
+| `getCumulusReceipts(options)` | Liste l'historique des tickets (par plage de dates). |
+| `getCumulusPrincipal()` | Récupère le profil utilisateur lié au compte. |
+| `getCumulusHousehold()` | Informations sur le ménage Cumulus. |
+| `getCumulusInvoice()` | Récupère les factures liées au compte. |
+| `getCumulusCreditCard()` | Informations sur la carte de crédit Cumulus. |
+| `getCumulusPaymentSites()` | Liste des sites de paiement associés. |
+
+---
+
+## 🛡️ Sécurité
+
+> **Important :** Nécessite des **cookies de login** valides.
+
+* **`getOptions()`** : Récupère les options de sécurité du compte.
+* **`getPaymentDevices()`** : Liste les appareils de paiement enregistrés.
