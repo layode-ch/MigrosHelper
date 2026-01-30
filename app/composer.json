@@ -1,0 +1,17 @@
+{
+    "name": "joao/reely",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Reely\\": "src/"
+        }
+    },
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.8",
+        "php-di/slim-bridge": "^3.4",
+        "zircote/swagger-php": "^6.0",
+        "slim/php-view": "^3.4",
+        "joao-prrvz/php-utils": "^0.0.3"
+    }
+}

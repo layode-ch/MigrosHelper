@@ -1,0 +1,26 @@
+  services:
+    wrapper:
+      image: node:latest
+      networks:
+        - app-network
+      volumes:
+        - ./wrapper:/app
+      command: bash -c "cd /app && npm i && npm run serve"
+      restart: unless-stopped
+    app:
+      build: ./app
+      networks:
+        - app-network
+      volumes:
+        - ./app:/var/www/html
+      command: bash -c "composer install && php -S 0.0.0.0:80 -t public"
+      ports:
+        - "80:80"
+      restart: unless-stopped
+
+  networks:
+    app-network:
+      driver: bridge
+  volumes:
+    db-data:
+      driver: local

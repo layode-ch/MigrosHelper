@@ -1,0 +1,1 @@
+<h1><?= htmlspecialchars($_SESSION["TEXTS"]['home_welcome_message']); ?></h1>
