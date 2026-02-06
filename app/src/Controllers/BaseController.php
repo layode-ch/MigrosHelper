@@ -1,7 +1,7 @@
 <?php 
-namespace Reely\Controllers;
+namespace MigrosHelper\Controllers;
 
-use Reely\Enums\HTTPStatus;
+use MigrosHelper\Enums\HTTPStatus;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Request;
@@ -69,7 +69,7 @@ abstract class BaseController {
 		return $this->sendJSON($errors, $status);
 	}
 
-	function renderView(Response $response, string $viewFile, array $viewData) : Response {
-        return $this->renderer->render($response, $viewFile, $viewData);
+	protected function render(string $viewFile, array $viewData, ?Response $response = null) : Response {
+        return $this->renderer->render($response ?? $this->respFact->createResponse(), $viewFile, $viewData);
     }
 }

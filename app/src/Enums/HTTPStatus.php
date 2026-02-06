@@ -1,5 +1,5 @@
 <?php
-namespace Reely\Enums;
+namespace MigrosHelper\Enums;
 
 enum HTTPStatus: int {
     // 2xx Success

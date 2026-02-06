@@ -1,66 +1,44 @@
 <!DOCTYPE html>
-<html lang="<?= htmlspecialchars($_SESSION["lang"]); ?>" data-theme="autumn">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reely</title>
+    <title>Migros Helper</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="navbar bg-primary text-primary-content">
-                <button class="btn btn-ghost text-xl">Reely</button>
-                <div class="flex">
-                    <img src="./icons/france.png" alt="FR" class="h-6">
-                    <input type="checkbox" class="toggle mx-2" id="toggleLang" onchange="setLang()" />
-                    <img src="./icons/united-kingdom.png" alt="EN" class="h-6">
-                </div>
-            </div>
+<body class="min-h-screen flex flex-col">
+	<header class="sticky top-0 z-1">
+        <nav class="navbar bg-base-100 shadow-sm">
+            <a class="btn btn-ghost text-xl" href="/">Mirgos Helper</a>
         </nav>
     </header>
-    <main><?= $content ?></main>
-    <footer></footer>
+	<main class="m-auto relative flex flex-1">
+        <?= $content ?>
+    </main>
+	<footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
+		<nav>
+			<h6 class="footer-title">Authors</h6>
+			<a class="link link-hover" href="https://github.com/NoodraTV">Nicolas Bieri</a>
+			<a class="link link-hover" href="https://github.com/Ethjuro">Ethan Raphael</a>
+			<a class="link link-hover" href="https://github.com/layode-ch">Joao Victor Pereira Vaz</a>
+		</nav>
+		<nav>
+			<h6 class="footer-title">Frontend</h6>
+			<a class="link link-hover" href="https://daisyui.com/">DaisyUI</a>
+			<a class="link link-hover" href="https://tailwindcss.com/">Tailwind</a>
+		</nav>
+		<nav>
+			<h6 class="footer-title">Backend</h6>
+			<a class="link link-hover" href="https://www.slimframework.com/">Slim Framework V4</a>
+			<a class="link link-hover" href="https://github.com/Seldaek/monolog">Monolog</a>
+		</nav>
+		<nav>
+			<h6 class="footer-title">Legal</h6>
+			<a class="link link-hover" href="https://creativecommons.org/licenses/by-nc/4.0/">Licence CC BY-NC V4.0</a>
+		</nav>
+	</footer>
 </body>
-<script>
-    console.log(document.cookie);
-
-    if(getCookie("lang") === "en")
-        document.querySelector("#toggleLang").checked = true;
-
-    function setLang()
-    {
-        let checked = document.querySelector("#toggleLang").checked;
-
-        if(checked)
-            setCookie("lang","en");
-        else
-            setCookie("lang","fr");
-
-        console.log(document.cookie);
-        
-        location.reload();
-    }
-
-    function setCookie(name,value) {
-        document.cookie = name + "=" + (value || "") + "; path=/";
-    }
-
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-
-    function eraseCookie(name) {   
-        document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
-</script>
 </html>
