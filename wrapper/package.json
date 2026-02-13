@@ -7,9 +7,13 @@
     "serve": "tsx watch index.ts"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "migros-api-wrapper": "^1.1.30",
-    "tsc": "^2.0.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0"
   }
 }

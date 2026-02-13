@@ -12,10 +12,10 @@
 <body class="min-h-screen flex flex-col">
     <header class="sticky top-0 z-1">
         <nav class="navbar bg-base-100 shadow-sm">
-            <a class="btn btn-ghost text-xl" href="/">Mirgos Helper</a>
+            <a class="btn btn-ghost text-xl" href="/"><i class="bi bi-basket2-fill text-primary"></i> Migros Helper</a>
         </nav>
     </header>
-    <main class="m-auto relative flex flex-1">
+    <main class="relative flex flex-1 w-full min-h-0 overflow-hidden">
         <?= $content ?>
     </main>
     <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
@@ -34,12 +34,15 @@
             <h6 class="footer-title">Backend</h6>
             <a class="link link-hover" href="https://www.slimframework.com/">Slim Framework V4</a>
             <a class="link link-hover" href="https://github.com/Seldaek/monolog">Monolog</a>
-            <a class="link link-hover" href="https://n8n.io/">n8n</a>
+            <a class="link link-hover" href="https://mistral.ai/">Mistral AI</a>
         </nav>
         <nav>
             <h6 class="footer-title">Legal</h6>
             <a class="link link-hover" href="https://creativecommons.org/licenses/by-nc/4.0/">Licence CC BY-NC V4.0</a>
         </nav>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <script src="/js/chat.js"></script>
 </body>
 </html>

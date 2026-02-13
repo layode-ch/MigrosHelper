@@ -1,41 +1,32 @@
-  services:
-    wrapper:
-      image: node:latest
-      networks:
-        - app-network
-      volumes:
-        - ./wrapper:/app
-      command: bash -c "cd /app && npm i && npm run serve"
-      restart: unless-stopped
-    app:
-      build: ./app
-      networks:
-        - app-network
-      volumes:
-        - ./app:/var/www/html
-      command: bash -c "composer install && php -S 0.0.0.0:80 -t public"
-      ports:
-        - "80:80"
-      restart: unless-stopped
-    n8n:
-      image: n8nio/n8n
-      environment:
-        N8N_RUNNERS_ENABLED: true
-        TZ: "ETC+2"
-        GENERIC_TIMEZONE: "ETC"
-        N8N_BASIC_AUTH_ACTIVE: true
-        N8N_BASIC_AUTH_USER: admin
-        N8N_BASIC_AUTH_PASSWORD: changeme123
-      volumes:
-        - ./n8n-data:/home/node/.n8n
-      ports:
-      - "8080:5678"
+services:
+  wrapper:
+    image: node:22
+    networks:
+      - app-network
+    volumes:
+      - ./wrapper:/app
+    expose:
+      - "3000"
+    env_file: .env
+    command: >
+      bash -c "cd /app && npm i &&
+      cd node_modules/migros-api-wrapper &&
+      echo '{\"compilerOptions\":{\"outDir\":\"dist\",\"target\":\"ES2020\",\"module\":\"commonjs\",\"esModuleInterop\":true,\"declaration\":true,\"resolveJsonModule\":true,\"skipLibCheck\":true},\"include\":[\"src\"]}' > tsconfig.json &&
+      /app/node_modules/.bin/tsc &&
+      cd /app && npm run serve"
+    restart: unless-stopped
 
+  app:
+    build: ./app
+    networks:
+      - app-network
+    volumes:
+      - ./app:/var/www/html
+    command: bash -c "composer install && php -S 0.0.0.0:80 -t public public/index.php"
+    ports:
+      - "80:80"
+    restart: unless-stopped
 
-
-  networks:
-    app-network:
-      driver: bridge
-  volumes:
-    db-data:
-      driver: local
+networks:
+  app-network:
+    driver: bridge
